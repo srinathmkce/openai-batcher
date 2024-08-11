@@ -4,3 +4,4 @@ MODEL_NAME = "gpt-4o-mini"
 TEMPERATURE = 0.1
 RESPONSE_FORMAT = {"type": "json_object"}
 MESSAGE_FORMAT = None
+WAIT_TIME_IN_SECONDS = 30

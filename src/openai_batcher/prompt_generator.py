@@ -2,6 +2,7 @@ import os
 import json
 from openai_batcher.config import (
     INPUT_DIR,
+    OUTPUT_DIR,
     MODEL_NAME,
     TEMPERATURE,
     RESPONSE_FORMAT,
@@ -13,19 +14,26 @@ from typing import List, Dict, Any
 log = logging.getLogger(__name__)
 
 
-def _write_prompts_to_file(file_name: str, prompt_list: List[Dict[str, Any]]) -> None:
+def _create_input_output_directory() -> None:
+    """
+    Create the input and output directories if they do not exist.
+    """
+    if not os.path.exists(INPUT_DIR):
+        os.makedirs(INPUT_DIR)
+    if not os.path.exists(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
+
+
+def _write_prompts_to_file(batch_file_path: str, prompt_list: List[Dict[str, Any]]) -> None:
     """
     Write prompts to a file.
     Args:
-        file_name (str): The name of the file to write the prompts to.
+        batch_file_path (str): The target path for writing the prompts.
         prompt_list (List[Dict[str, Any]]): A list of prompts to write to the file.
     Returns:
         None
     """
-    if not os.path.exists(INPUT_DIR):
-        os.makedirs(INPUT_DIR)
-
-    batch_file_path = os.path.join(INPUT_DIR, file_name)
+    log.info(f"Writing prompts to file path: {batch_file_path}")
     with open(batch_file_path, "w") as file:
         for prompt in prompt_list:
             file.write(json.dumps(prompt) + "\n")
