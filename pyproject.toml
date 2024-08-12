@@ -1,0 +1,21 @@
+[project]
+name = "openai-batcher"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Gokul", email = "gokulnath30@gmail.com"},
+]
+dependencies = [
+    "pandas>=2.2.2",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true

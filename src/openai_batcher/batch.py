@@ -3,6 +3,7 @@ import logging
 from openai_batcher._validation import _validate_openai_key, _validate_data_types
 from openai_batcher._prompt_generator import _write_prompts_to_file, _generate_prompt
 from typing import Union
+from openai import OpenAI
 
 # Configure logging
 logging.basicConfig(

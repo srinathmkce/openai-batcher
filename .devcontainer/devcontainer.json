@@ -1,0 +1,14 @@
+{
+    "name": "Python Dev Container",
+    "build": {
+      "dockerfile": "../Dockerfile",
+      "context": ".."
+    },
+    "customizations": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    },
+    "postCreateCommand": "pdm install"
+  }
+  
