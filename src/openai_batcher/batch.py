@@ -1,9 +1,15 @@
 import pandas as pd
 import logging
-from openai_batcher._validation import _validate_openai_key, _validate_data_types
-from openai_batcher._prompt_generator import _write_prompts_to_file, _generate_prompt
+import os
+from openai_batcher.interface import _initialize_openai
+from openai_batcher.validation import _validate_openai_key, _validate_data_types
+from openai_batcher.prompt_generator import _write_prompts_to_file, _generate_prompt, _create_input_output_directory
+from openai_batcher.interface import _upload_batch_file_to_openai, _start_batch_execution
+from openai_batcher.config import INPUT_DIR
+from openai_batcher.monitor import _wait_until_job_is_finished
 from typing import Union
 from openai import OpenAI
+from tqdm import tqdm
 
 # Configure logging
 logging.basicConfig(
@@ -42,27 +48,23 @@ def process_batch(
     if isinstance(batch_ids, str) and batch_ids == "auto":
         batch_ids = [f"{i}" for i in range(len(batch_user_prompts))]
 
-    for start in range(start_index, end_index, batch_size):
+    client = _initialize_openai()
+    _create_input_output_directory()
+
+    for start in tqdm(range(start_index, end_index, batch_size)):
         end = min(start + batch_size, end_index)
 
         logging.info(f"Processing batch from {start} to {end}...")
         batch_file_name = f"batch_{start}_{end}.jsonl"
+        batch_file_path  = os.path.join(INPUT_DIR, batch_file_name)
 
         batch_prompts = _generate_prompt(
             batch_ids=batch_ids[start:end],
             batch_user_prompts=batch_user_prompts[start:end],
             system_prompt=system_prompt,
         )
-        _write_prompts_to_file(file_name=batch_file_name, prompt_list=batch_prompts)
-
-
-if __name__ == "__main__":
-    import os
-
-    system_prompt = "Translate the following English sentences to French."
-    batch_user_prompts = ["Hello, how are you?", "What is your name?", "Where are you from?"]
-    start_index = 0
-    end_index = len(batch_user_prompts)
-    batch_size = 2
-    os.environ["OPENAI_API_KEY"] = "your-key"
-    process_batch(system_prompt, batch_user_prompts, start_index, end_index, batch_size)
+        _write_prompts_to_file(batch_file_path=batch_file_path, prompt_list=batch_prompts)
+        batch_file = _upload_batch_file_to_openai(client=client, batch_file_path=batch_file_path)
+        batch_job = _start_batch_execution(client=client, batch_id=batch_file.id)
+        _wait_until_job_is_finished(client=client, job_id=batch_job.id, output_file_name=batch_file_name)
+        
