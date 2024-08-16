@@ -18,6 +18,9 @@ def _fetch_results(client, job_id, output_file_name):
         None
     """
     result_file_id = client.batches.retrieve(batch_id=job_id).output_file_id
+    if not result_file_id:
+        log.error(f"Output file ID not found for job: {job_id}")
+        return 
     result = client.files.content(result_file_id).content
     result_file_path = os.path.join(OUTPUT_DIR, f"output_{output_file_name}")
     log.info(f"Writing to file: {result_file_path}")
@@ -52,8 +55,9 @@ def _wait_until_job_is_finished(client, job_id, output_file_name):
         elif status == "in_progress":
             log.info(f"Batch execution for {output_file_name} is in progress. Sleeping for 30 seconds")
             time.sleep(WAIT_TIME_IN_SECONDS)
-        else:
-            log.error(f"Unknown status: {status}")
-            return
-    return
+        #TODO - Add more status checks
+        # else:
+        #     log.error(f"Unknown status: {status}")
+        #     return
+    return 
     
