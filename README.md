@@ -36,7 +36,8 @@ train_df = dataset["train"].to_pandas()
 
 # Define system prompt
 system_prompt = """
-your task is to analyze the sentiment of the review and classify it as Positive or Negative. DO not add any explanation
+your task is to analyze the sentiment of the review and classify it as Positive or Negative. DO not add any explanation.
+JSON:{"sentiment": String // Positive or Negative} 
 """
 
 # Process batch
