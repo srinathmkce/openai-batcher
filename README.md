@@ -7,7 +7,7 @@ OpenAI Batcher is a Python package designed to process batches of user prompts u
 you can install the package directly using pip:
 
 ```bash
-pip install openai_batcher
+pip install openai-batcher
 ```
 
 Alternatively, You can clone the repository and install the dependencies:
