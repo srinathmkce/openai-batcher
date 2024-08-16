@@ -4,19 +4,25 @@ OpenAI Batcher is a Python package designed to process batches of user prompts u
 
 ## Installation
 
-To install the package, clone the repository and install the dependencies:
+you can install the package directly using pip:
+
+```bash
+pip install openai_batcher
+```
+
+Alternatively, You can clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/srinathmkce/openai-batcher
 cd openai_batcher
 pdm install
 ```
-Alternatively, you can install the package directly using pip:
-
-```bash
-pip install openai_batcher
-```
 ## Usage
+
+Set your openai key
+```bash
+export OPENAI_API_KEY=<SET-YOUR-OPENAI-KEY-HERE>
+```
 
 Here's an example of how to use the process_batch function from the package:
 
@@ -52,3 +58,12 @@ Using Dev Container Open the project in Visual Studio Code.Install the Remote - 
 ```bash
 docker build -t openai-batcher .
 ```
+
+## Next Steps
+
+Your contribuitions are welcome. Following features are yet to be added
+
+1. Checkpointing
+2. Auto-Batching
+3. Improved Polling meachnism
+4. Test Cases
